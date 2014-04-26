@@ -1,12 +1,12 @@
-Decsription -:
+**Decsription -:**
 
 A Generic Fraction Class using C++ Templates for storing and manipulating fractions.
 
-Requirements -:
+**Requirements -:**
 
 GNU C++ Compiler...
 
-Installation -:
+**Installation -:**
 
 Compile using g++ .
 " g++ fraction.cpp -o fraction "
