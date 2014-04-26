@@ -1,6 +1,7 @@
 #include<bits/stdc++.h>
 using namespace std;
 
+// FRACTION BEGINS...
 template<typename T>
 T gcd(const T& n,const T& d)  // Returns the GCD of "n" and "d"...
 {
@@ -9,7 +10,7 @@ T gcd(const T& n,const T& d)  // Returns the GCD of "n" and "d"...
     return gcd(d,n%d);
 }
 
-// Class Definition starts...
+// Class Forward Declaration...
 template<typename T> class fraction;
 
 // Routines without any attempt to prevent overflow...
@@ -34,45 +35,27 @@ template<typename T> fraction<T> operator /(const fraction<T>& one,const T& two)
 template<typename T> ostream& operator <<(ostream& out,const fraction<T>& a);
 template<typename T> istream& operator >>(istream& in,fraction<T>& a);
 
-// Class Definition
+// Class Definition begins...
 template<typename T>
 class fraction
 {
+    // Private Data Members...
     T num,den;
+
 public:
 
-    fraction(const T& n=0,const T& d=0)  // Constructor...
-    {
-        this->num=n;
-        this->den=d;
-    }
+    // Constructor...
+    fraction<T>(const T& n,const T& d);
 
-    fraction<T>& reduce()  // Reduce the fraction to the lowest terms...
-    {
-        if(den==0)
-            throw domain_error("");
-        T temp=gcd(num,den);
-        num/=temp;
-        den/=temp;
-        return *this;
-    }
+    // Reduce the fraction to the lowest terms...
+    fraction<T>& reduce();
 
-    T getNum() const  // Returns the numerator of the fraction...
-    {
-        return num;
-    }
+    // Returns the numerical value of the fraction as a double...
+    double value() const;
 
-    T getDen() const  //  Returns the denominator of the fraction...
-    {
-        return den;
-    }
-
-    double value() const  // Returns the numerical value of the fraction as a double...
-    {
-        if(den==0)
-            throw domain_error("");
-        return num/(double)den;
-    }
+    // Getters...
+    T getNum() const;
+    T getDen() const;
 
     // Friend Functions necessary for successful compilation...
     friend fraction operator + <>(const fraction& one,const T& two);
@@ -93,9 +76,48 @@ public:
     friend ostream& operator << <>(ostream& out,const fraction& a);
     friend istream& operator >> <>(istream& in,fraction& a);
 };
-
 // Class Definition ends...
 
+// Member Function Definitions...
+template<typename T>
+fraction<T>::fraction(const T& n=0,const T& d=0)
+{
+    this->num=n;
+    this->den=d;
+}
+
+template<typename T>
+fraction<T>& fraction<T>::reduce()
+{
+    if(den==0)
+        throw domain_error("");
+    T temp=gcd(num,den);
+    num/=temp;
+    den/=temp;
+    return *this;
+}
+
+template<typename T>
+T fraction<T>::getNum() const
+{
+    return num;
+}
+
+template<typename T>
+T fraction<T>::getDen() const
+{
+    return den;
+}
+
+template<typename T>
+double fraction<T>::value() const
+{
+    if(den==0)
+        throw domain_error("");
+    return num/(double)den;
+}
+
+// Binary Arithmetic Function Definitions...
 template<typename T>
 fraction<T> operator +(const fraction<T>& one,const fraction<T>& two)
 {
@@ -104,6 +126,7 @@ fraction<T> operator +(const fraction<T>& one,const fraction<T>& two)
     a.den=one.den*two.den;
     return a;
 }
+
 template<typename T>
 fraction<T> operator -(const fraction<T>& one,const fraction<T>& two)
 {
@@ -112,6 +135,7 @@ fraction<T> operator -(const fraction<T>& one,const fraction<T>& two)
     a.den=one.den*two.den;
     return a;
 }
+
 template<typename T>
 fraction<T> operator *(const fraction<T>& one,const fraction<T>& two)
 {
@@ -142,6 +166,7 @@ fraction<T> add(fraction<T> one,fraction<T> two)
     a.num=one.num+two.num;
     return a;
 }
+
 template<typename T>
 fraction<T> subtract(fraction<T> one,fraction<T> two)
 {
@@ -153,6 +178,7 @@ fraction<T> subtract(fraction<T> one,fraction<T> two)
     a.num=one.num-two.num;
     return a;
 }
+
 template<typename T>
 fraction<T> multiply(fraction<T> one,fraction<T> two)
 {
@@ -167,6 +193,7 @@ fraction<T> multiply(fraction<T> one,fraction<T> two)
     a.den=one.den*two.den;
     return a;
 }
+
 template<typename T>
 fraction<T> divide(fraction<T> one,fraction<T> two)
 {
@@ -189,16 +216,19 @@ fraction<T> operator +(const fraction<T>& one,const T& two)
 {
     return one+fraction<T>(two,1);
 }
+
 template<typename T>
 fraction<T> operator -(const fraction<T>& one,const T& two)
 {
     return one-fraction<T>(two,1);
 }
+
 template<typename T>
 fraction<T> operator *(const fraction<T>& one,const T& two)
 {
     return fraction<T>(one.getNum()*two,one.getDen());
 }
+
 template<typename T>
 fraction<T> operator /(const fraction<T>& one,const T& two)
 {
@@ -206,12 +236,14 @@ fraction<T> operator /(const fraction<T>& one,const T& two)
 }
 
 
+//  I/O Operator Definitions...
 template<typename T>
 ostream& operator <<(ostream& out,const fraction<T>& a)
 {
     out<<a.num<<"/"<<a.den;
     return out;
 }
+
 template<typename T>
 istream& operator >>(istream& in,fraction<T>& a)
 {
@@ -219,8 +251,9 @@ istream& operator >>(istream& in,fraction<T>& a)
     return in;
 }
 
+// FRACTION ENDS...
 
 int main()
 {
-     // Will update on usage...
+    // Will update on usage...
 }
