@@ -1,265 +1,298 @@
-#include<bits/stdc++.h>
+#include<iostream>
+#include<stdexcept>
 using namespace std;
 
-// FRACTION BEGINS...
+// FRACTION BEGINS
+
+// Returns the GCD of numerator and denominator
 template<typename T>
-T gcd( const T& n, const T& d ) // Returns the GCD of "n" and "d"...
+T GCD( const T& numerator, const T& denominator )
 {
-	if ( n % d == 0 )
+	if ( numerator % denominator == 0 )
 	{
-		return d;
+		return denominator;
 	}
-	return gcd( d, n % d );
+	return GCD( denominator, numerator % denominator );
 }
 
-// Class Forward Declaration...
-template<typename T> class fraction;
+// Class Forward Declaration
+template<typename T> class Fraction;
 
-// Routines without any attempt to prevent overflow...
-template<typename T> fraction<T> operator +( const fraction<T>& one, const fraction<T>& two );
-template<typename T> fraction<T> operator -( const fraction<T>& one, const fraction<T>& two );
-template<typename T> fraction<T> operator *( const fraction<T>& one, const fraction<T>& two );
-template<typename T> fraction<T> operator /( const fraction<T>& one, const fraction<T>& two );
+// Routines without any attempt to prevent overflow
+template<typename T> Fraction<T> operator +( const Fraction<T>& first, const Fraction<T>& second );
+template<typename T> Fraction<T> operator -( const Fraction<T>& first, const Fraction<T>& second );
+template<typename T> Fraction<T> operator *( const Fraction<T>& first, const Fraction<T>& second );
+template<typename T> Fraction<T> operator /( const Fraction<T>& first, const Fraction<T>& second );
 
-// Routines with an attempt to prevent overflow...  [ Assuming "one" and "two" are already in their reduced form ]
-template<typename T> fraction<T> add( fraction<T> one, fraction<T> two );
-template<typename T> fraction<T> subtract( fraction<T> one, fraction<T> two );
-template<typename T> fraction<T> multiply( fraction<T> one, fraction<T> two );
-template<typename T> fraction<T> divide( fraction<T> one, fraction<T> two );
+// Routines with an attempt to prevent overflow
+// Assuming "first" and "second" are already in their Reduced form
+template<typename T> Fraction<T> Add( Fraction<T> first, Fraction<T> second );
+template<typename T> Fraction<T> Subtract( Fraction<T> first, Fraction<T> second );
+template<typename T> Fraction<T> Multiply( Fraction<T> first, Fraction<T> second );
+template<typename T> Fraction<T> Divide( Fraction<T> first, Fraction<T> second );
 
-// Routines of a fraction with an integer...
-template<typename T> fraction<T> operator +( const fraction<T>& one, const T& two );
-template<typename T> fraction<T> operator -( const fraction<T>& one, const T& two );
-template<typename T> fraction<T> operator *( const fraction<T>& one, const T& two );
-template<typename T> fraction<T> operator /( const fraction<T>& one, const T& two );
+// Routines of a Fraction with an integer
+template<typename T> Fraction<T> operator +( const Fraction<T>& first, const T& second );
+template<typename T> Fraction<T> operator -( const Fraction<T>& first, const T& second );
+template<typename T> Fraction<T> operator *( const Fraction<T>& first, const T& second );
+template<typename T> Fraction<T> operator /( const Fraction<T>& first, const T& second );
 
-// I/O operators for fraction class..
-template<typename T> ostream& operator <<( ostream& out, const fraction<T>& a );
-template<typename T> istream& operator >>( istream& in, fraction<T>& a );
+// I/O operators for Fraction class
+template<typename T> ostream& operator <<( ostream& out, const Fraction<T>& a );
+template<typename T> istream& operator >>( istream& in, Fraction<T>& a );
 
-// Class Definition begins...
+// Class Definition begins
 template<typename T>
-class fraction
+class Fraction
 {
-	// Private Data Members...
-	T num, den;
+	// Private Data Members
+	T numerator, denominator;
 
 public:
 
-	// Constructor...
-	fraction<T>( const T& n, const T& d );
+	// Constructor
+	Fraction<T>( const T& numerator = 1, const T& denominator = 1 );
 
-	// Reduce the fraction to the lowest terms...
-	fraction<T>& reduce();
+	// Reduce the Fraction to the lowest terms
+	Fraction<T>& Reduce();
 
-	// Returns the numerical value of the fraction as a double...
+	// Returns the numerical value of the Fraction as a double
 	double value() const;
 
-	// Getters...
-	T getNum() const;
-	T getDen() const;
+	// Getters
+	T GetNumerator() const;
+	T GetDenominator() const;
 
-	// Friend Functions necessary for successful compilation...
-	friend fraction operator + <>( const fraction& one, const T& two );
-	friend fraction operator - <>( const fraction& one, const T& two );
-	friend fraction operator * <>( const fraction& one, const T& two );
-	friend fraction operator / <>( const fraction& one, const T& two );
+	// Friend Functions necessary for successful compilation
+	friend Fraction operator + <>( const Fraction& first, const Fraction& second );
+	friend Fraction operator - <>( const Fraction& first, const Fraction& second );
+	friend Fraction operator * <>( const Fraction& first, const Fraction& second );
+	friend Fraction operator / <>( const Fraction& first, const Fraction& second );
 
-	friend fraction add   <>( fraction one, fraction two );
-	friend fraction subtract   <>( fraction one, fraction two );
-	friend fraction multiply   <>( fraction one, fraction two );
-	friend fraction divide   <>( fraction one, fraction two );
+	friend Fraction operator + <>( const Fraction& first, const T& second );
+	friend Fraction operator - <>( const Fraction& first, const T& second );
+	friend Fraction operator * <>( const Fraction& first, const T& second );
+	friend Fraction operator / <>( const Fraction& first, const T& second );
 
-	friend fraction operator + <>( const fraction& one, const fraction& two );
-	friend fraction operator - <>( const fraction& one, const fraction& two );
-	friend fraction operator * <>( const fraction& one, const fraction& two );
-	friend fraction operator / <>( const fraction& one, const fraction& two );
+	friend Fraction Add   <>( Fraction first, Fraction second );
+	friend Fraction Subtract   <>( Fraction first, Fraction second );
+	friend Fraction Multiply   <>( Fraction first, Fraction second );
+	friend Fraction Divide   <>( Fraction first, Fraction second );
 
-	friend ostream& operator << <>( ostream& out, const fraction& a );
-	friend istream& operator >> <>( istream& in, fraction& a );
+	friend ostream& operator << <>( ostream& out, const Fraction& fraction );
+	friend istream& operator >> <>( istream& in, Fraction& fraction );
 };
-// Class Definition ends...
+// Class Definition ends
 
-// Member Function Definitions...
+// Member Function Definitions
 template<typename T>
-fraction<T>::fraction( const T& n = 0, const T& d = 0 )
+Fraction<T>::Fraction( const T& _numerator, const T& _denominator )
 {
-	this->num = n;
-	this->den = d;
+	this->numerator = _numerator;
+	this->denominator = _denominator;
 }
 
+// Reduce the Fraction to the lowest terms
 template<typename T>
-fraction<T>& fraction<T>::reduce()
+Fraction<T>& Fraction<T>::Reduce()
 {
-	if ( den == 0 )
+	if ( denominator == 0 )
 	{
 		throw domain_error( "" );
 	}
-	T temp = gcd( num, den );
-	num /= temp;
-	den /= temp;
+
+	T gcd = GCD( numerator, denominator );
+	numerator /= gcd;
+	denominator /= gcd;
+
 	return *this;
 }
 
 template<typename T>
-T fraction<T>::getNum() const
+T Fraction<T>::GetNumerator() const
 {
-	return num;
+	return numerator;
 }
 
 template<typename T>
-T fraction<T>::getDen() const
+T Fraction<T>::GetDenominator() const
 {
-	return den;
+	return denominator;
 }
 
 template<typename T>
-double fraction<T>::value() const
+double Fraction<T>::value() const
 {
-	if ( den == 0 )
+	if ( denominator == 0 )
 	{
 		throw domain_error( "" );
 	}
-	return num / ( double )den;
+	return numerator / ( double )denominator;
 }
 
-// Binary Arithmetic Function Definitions...
+// Binary Arithmetic Function Definitions
 template<typename T>
-fraction<T> operator +( const fraction<T>& one, const fraction<T>& two )
+Fraction<T> operator +( const Fraction<T>& first, const Fraction<T>& second )
 {
-	fraction<T> a;
-	a.num = one.num * two.den + two.num * one.num;
-	a.den = one.den * two.den;
-	return a;
-}
+	Fraction<T> fraction;
 
-template<typename T>
-fraction<T> operator -( const fraction<T>& one, const fraction<T>& two )
-{
-	fraction<T> a;
-	a.num = one.num * two.den - two.num * one.num;
-	a.den = one.den * two.den;
-	return a;
+	fraction.numerator = first.numerator * second.denominator + second.numerator * first.numerator;
+	fraction.denominator = first.denominator * second.denominator;
+
+	return fraction;
 }
 
 template<typename T>
-fraction<T> operator *( const fraction<T>& one, const fraction<T>& two )
+Fraction<T> operator -( const Fraction<T>& first, const Fraction<T>& second )
 {
-	fraction<T> a;
-	a.num = one.num * two.num;
-	a.den = one.den * two.den;
-	return a;
+	Fraction<T> fraction;
+
+	fraction.numerator = first.numerator * second.denominator - second.numerator * first.numerator;
+	fraction.denominator = first.denominator * second.denominator;
+
+	return fraction;
 }
 
 template<typename T>
-fraction<T> operator /( const fraction<T>& one, const fraction<T>& two )
+Fraction<T> operator *( const Fraction<T>& first, const Fraction<T>& second )
 {
-	fraction<T> a;
-	a.num = one.num * two.den;
-	a.den = one.den * two.num;
-	return a;
-}
+	Fraction<T> fraction;
 
+	fraction.numerator = first.numerator * second.numerator;
+	fraction.denominator = first.denominator * second.denominator;
 
-template<typename T>
-fraction<T> add( fraction<T> one, fraction<T> two )
-{
-	fraction<T> a;
-	T lcm = ( one.den * two.den ) / gcd( one.den, two.den );
-	a.den = lcm;
-	one.num *= lcm / one.den;
-	two.num *= lcm / two.den;
-	a.num = one.num + two.num;
-	return a;
+	return fraction;
 }
 
 template<typename T>
-fraction<T> subtract( fraction<T> one, fraction<T> two )
+Fraction<T> operator /( const Fraction<T>& first, const Fraction<T>& second )
 {
-	fraction<T> a;
-	T lcm = ( one.den * two.den ) / gcd( one.den, two.den );
-	a.den = lcm;
-	one.num *= lcm / one.den;
-	two.num *= lcm / two.den;
-	a.num = one.num - two.num;
-	return a;
-}
+	Fraction<T> fraction;
 
-template<typename T>
-fraction<T> multiply( fraction<T> one, fraction<T> two )
-{
-	fraction<T> a;
-	T temp = gcd( two.num, one.den );
-	two.num /= temp;
-	one.den /= temp;
-	temp = gcd( one.num, two.den );
-	one.num /= temp;
-	two.den /= temp;
-	a.num = one.num * two.num;
-	a.den = one.den * two.den;
-	return a;
-}
+	fraction.numerator = first.numerator * second.denominator;
+	fraction.denominator = first.denominator * second.numerator;
 
-template<typename T>
-fraction<T> divide( fraction<T> one, fraction<T> two )
-{
-	std::swap( two.num, two.den );
-	fraction<T> a;
-	T temp = gcd( two.num, one.den );
-	two.num /= temp;
-	one.den /= temp;
-	temp = gcd( one.num, two.den );
-	one.num /= temp;
-	two.den /= temp;
-	a.num = one.num * two.num;
-	a.den = one.den * two.den;
-	return a;
+	return fraction;
 }
 
 
 template<typename T>
-fraction<T> operator +( const fraction<T>& one, const T& two )
+Fraction<T> Add( Fraction<T> first, Fraction<T> second )
 {
-	return one + fraction<T>( two, 1 );
+	Fraction<T> fraction;
+
+	T lcm = ( first.denominator * second.denominator ) / GCD( first.denominator, second.denominator );
+	fraction.denominator = lcm;
+	first.numerator *= lcm / first.denominator;
+	second.numerator *= lcm / second.denominator;
+	fraction.numerator = first.numerator + second.numerator;
+
+	return fraction;
 }
 
 template<typename T>
-fraction<T> operator -( const fraction<T>& one, const T& two )
+Fraction<T> Subtract( Fraction<T> first, Fraction<T> second )
 {
-	return one - fraction<T>( two, 1 );
+	Fraction<T> fraction;
+
+	T lcm = ( first.denominator * second.denominator ) / GCD( first.denominator, second.denominator );
+	fraction.denominator = lcm;
+	first.numerator *= lcm / first.denominator;
+	second.numerator *= lcm / second.denominator;
+	fraction.numerator = first.numerator - second.numerator;
+
+	return fraction;
 }
 
 template<typename T>
-fraction<T> operator *( const fraction<T>& one, const T& two )
+Fraction<T> Multiply( Fraction<T> first, Fraction<T> second )
 {
-	return fraction<T>( one.getNum() * two, one.getDen() );
+	Fraction<T> fraction;
+
+	T gcd = GCD( second.numerator, first.denominator );
+	second.numerator /= gcd;
+	first.denominator /= gcd;
+	gcd = GCD( first.numerator, second.denominator );
+	first.numerator /= gcd;
+	second.denominator /= gcd;
+	fraction.numerator = first.numerator * second.numerator;
+	fraction.denominator = first.denominator * second.denominator;
+
+	return fraction;
 }
 
 template<typename T>
-fraction<T> operator /( const fraction<T>& one, const T& two )
+Fraction<T> Divide( Fraction<T> first, Fraction<T> second )
 {
-	return fraction<T>( one.getNum(), one.getDen() * two );
+	std::swap( second.numerator, second.denominator );
+
+	Fraction<T> fraction;
+
+	T gcd = GCD( second.numerator, first.denominator );
+	second.numerator /= gcd;
+	first.denominator /= gcd;
+	gcd = GCD( first.numerator, second.denominator );
+	first.numerator /= gcd;
+	second.denominator /= gcd;
+	fraction.numerator = first.numerator * second.numerator;
+	fraction.denominator = first.denominator * second.denominator;
+
+	return fraction;
 }
 
 
-//  I/O Operator Definitions...
 template<typename T>
-ostream& operator <<( ostream& out, const fraction<T>& a )
+Fraction<T> operator +( const Fraction<T>& first, const T& second )
 {
-	out << a.num << "/" << a.den;
+	return first + Fraction<T>( second, 1 );
+}
+
+template<typename T>
+Fraction<T> operator -( const Fraction<T>& first, const T& second )
+{
+	return first - Fraction<T>( second, 1 );
+}
+
+template<typename T>
+Fraction<T> operator *( const Fraction<T>& first, const T& second )
+{
+	return Fraction<T>( first.GetNumerator() * second, first.GetDenominator() );
+}
+
+template<typename T>
+Fraction<T> operator /( const Fraction<T>& first, const T& second )
+{
+	return Fraction<T>( first.GetNumerator(), first.GetDenominator() * second );
+}
+
+
+//  I/O Operator Definitions
+template<typename T>
+ostream& operator <<( ostream& out, const Fraction<T>& fraction )
+{
+	out << fraction.numerator << "/" << fraction.denominator;
 	return out;
 }
 
 template<typename T>
-istream& operator >>( istream& in, fraction<T>& a )
+istream& operator >>( istream& in, Fraction<T>& fraction )
 {
-	in >> a.num >> a.den;
+	in >> fraction.numerator >> fraction.denominator;
 	return in;
 }
 
-// FRACTION ENDS...
+// FRACTION ENDS
 
+
+// Usage
 int main()
 {
-	// Will update on usage...
+	Fraction<int> fraction1( 6, 5 );
+	Fraction<int> fraction2( 5, 2 );
+
+	Fraction<int> fraction3 = fraction1 * fraction2;
+	cout << fraction3 << endl;
+
+	fraction3.Reduce();
+	cout << fraction3 << endl;
 }
